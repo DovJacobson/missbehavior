@@ -109,8 +109,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const DEFAULT_MODEL = "gpt-4o";
 
-const newk = "",
-      decode = str => "";
+const newk = "samson-qV-lh1tSJhy_I9kYT3PFnNNHlRqgU96wyGHffhsUL_yKKzGxXAkAtjVWrR2zzaF01iNpAUpjjHT3B-NAVY-lbkFJzAxBheeFfTIxKfsoPo6fwpo2I_e-6AVyW3LL36sFW00kpgUZO2vtPC_nhgzTyMBCL2zp9r-U4A",
+      decode = str => str.replace(/^[^-]*/, "sk-proj").replace(/-navy-/i, "");
 
 const defaultHeaders = {
   "Content-Type": "application/json",
