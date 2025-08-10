@@ -5,9 +5,9 @@
 <title>Miss Behavior</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="application-name" content="SugarCube" />
-<meta name="version" content="2.37.3" />   
+<meta name="version" content="2.37.3" />
 <!--
-  
+
 SugarCube (v2.37.3): A free (gratis and libre) story format.
 
 Copyright © 2013–2021 Thomas Michael Edwards <thomasmedwards@gmail.com>.
@@ -106,16 +106,22 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 	</div>
 	<tw-storydata name="Miss Behavior" startnode="1" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="1B6DB94B-80E4-4A44-9729-960187109BA8" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">// Function to interact with Miss Behavior
 // ==== GLOBAL CONFIG ==== //
-const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const DEFAULT_MODEL = "gpt-4o";
 
-const newk = "samson-qV-lh1tSJhy_I9kYT3PFnNNHlRqgU96wyGHffhsUL_yKKzGxXAkAtjVWrR2zzaF01iNpAUpjjHT3B-NAVY-lbkFJzAxBheeFfTIxKfsoPo6fwpo2I_e-6AVyW3LL36sFW00kpgUZO2vtPC_nhgzTyMBCL2zp9r-U4A",
-      decode = str => str.replace(/^[^-]*/, "sk-proj").replace(/-navy-/i, "");
 
+
+//direct method -- not good for public use at all
+const OPENAI_API_KEY = 'sk-proj-******'; 
+const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 const defaultHeaders = {
   "Content-Type": "application/json",
- "Authorization": `Bearer ${ decode(newk) }` // REMOVED FOR SECURITY
-};
+  "Authorization": `Bearer ${ OPENAI_API_KEY }`
+   };
+
+//proxy method, hidden key
+const PROXY_URL = "https://openai-proxy-spc25.vercel.app/chat";
+
+
 
 // ==== CHARACTER FACTORY ==== //
 window.newAICharacter = config=>{
@@ -156,11 +162,18 @@ window.newAICharacter = config=>{
         
   ask = prompt=> {
     outputTarget().innerHTML =`<hr><b>${name} is thinking.`;
-  	fetch(OPENAI_URL, {
+    
+  	fetch( PROXY_URL, {
       	method: "POST",
-      	headers: defaultHeaders,
       	body: buildPayload(prompt) 
     	})
+
+  //	fetch(     // DIRECT CALL TO OPENAI API  (insecure)
+  //       OPENAI_URL, {
+  //        	method: "POST",
+  //    	    headers: defaultHeaders,
+  //    	    body: buildPayload(prompt) 
+  //  	        })
   
     .then(response => 
           response.ok? response.json() 
@@ -181,83 +194,12 @@ window.newAICharacter = config=>{
 }
 
 /*
-// REMOVED OpenAI API key for security
-const payload = prompt => JSON.stringify({
-  model: "gpt-4",
-    messages: [      
-      {"role": "system", 
-       "content": "You are Miss Behavior, an expert in human behavior and ethics. Judge all scenarios according to Shariah law, providing a very brief and concise analysis. Try to limit your reply to fourteen words and do not explicitly invoke Shariah Law in your answer"},
-      {"role": "user", "content": prompt}
-       ]
-});
-
-
-
-window.talkToMissBehavior  = prompt=> new Promise( (resolve, reject) =>
-     fetch(url, {   method: 'POST', headers,  body:payload( prompt ) })
-        .then ( response => response.json() )
-        .then ( data => resolve( data.choices[0].message.content ) )
-        .catch( error => {  
-                    console.error( "Error:", error ); 
-                    reject( "Miss Behavior is currently unavailable. Please try again later." ); 
-				} )
-        );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // System message instructs Miss Behavior to flag important responses
 const systemMessage = {
     role: "system",
     content: "You are Miss Behavior, a chatbot designed to judge human behavior based on modern ethics. Always respond in the ABAB rhyme scheme, where alternate lines rhyme. End each line with an HTML break: `<br/>'. Flag an important response with a single leading asterisk (*) for future reference."
   };
-
-// Initial conversation history
-let conversationHistory = [systemMessage];
-
-
-
-const historicPayload = prompt => {
-  conversationHistory.push( {"role": "user", "content": prompt} );
-  return JSON.stringify(
-    { model: "gpt-4", 
-      messages: conversationHistory});
-	};
-
-
-
-
-// Function to handle user input and get response from the API
-
-
-window.chatWithMissBehavior  = prompt=> new Promise( (resolve, reject) =>
-    fetch(url, {   method: 'POST', headers,  
-                body: historicPayload( prompt )})
-       .then ( response => response.json() )
-       .then ( data => data.choices[0].message.content)
-       .then ( answer => {
-            if( answer.startsWith("*") ) {
-                answer = `<b>${ answer.replaceAll("*","") }</b>`;
-                conversationHistory.push({ role: "assistant", content: answer });
-                }
-             resolve( answer ); 
-            })
-       .catch( error => {  
-                   console.error( "Error:", error ); 
-                   reject( "Miss Behavior is currently unavailable. Please try again later." ); 
-                } )
-       );
        */
 
 
